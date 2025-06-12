@@ -1,0 +1,27 @@
+[BUG] Deauth işlemi tüm cihazlarda etkili çalışmıyor
+
+
+## Sorunun Tanımı
+Projenin mevcut sürümünde `send_deauth()` fonksiyonu bazı durumlarda hedef cihazları başarıyla bağlantıdan düşüremiyor. Özellikle bazı modemlerde veya istemcilerde deauth paketleri etkisiz kalıyor gibi gözüküyor.
+
+## Beklenen Davranış
+Seçilen hedef cihazın BSSID üzerinden gönderilen deauth paketleri ile bağlantısının kesilmesi ve ağa yeniden bağlanmasının engellenmesi beklenmektedir.
+
+## Gerçekleşen Davranış
+- Deauth paketi gönderiliyor ancak tüm istemciler bağlantıyı kesmiyor.
+- Bazı durumlarda hiçbir etki gözlemlenemiyor.
+- `verbose=1` çıktısında gönderim başarılı görünmesine rağmen pratikte düşme gerçekleşmiyor.
+
+## Olası Sebepler
+- Bazı modemler veya istemciler modern koruma mekanizmalarına sahip (örneğin: 802.11w Protected Management Frames).
+- Monitor modunun tam olarak aktif olmaması veya çakışan arayüz kullanımı.
+- Kanal uyuşmazlığı / BSSID çakışması.
+
+## Çözüm Önerileri
+- Paket gönderim sayısı artırılarak denenebilir (örneğin `count=100`).
+- Farklı `iface` denemeleri yapılabilir (`wlan0mon` yerine başka bir arayüz).
+- 802.11w desteği olmayan cihazlarla test yapılması.
+- Aireplay-ng gibi araçlarla karşılaştırmalı test yapılması önerilir.
+
+## Not
+Bu özellik hâlâ geliştirme aşamasındadır. Katkı ve test desteği memnuniyetle kabul edilir
